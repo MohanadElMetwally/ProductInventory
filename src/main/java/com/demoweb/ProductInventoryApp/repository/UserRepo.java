@@ -1,4 +1,4 @@
-package com.demoweb.ProductInventoryApp.Repository;
+package com.demoweb.ProductInventoryApp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
