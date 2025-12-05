@@ -30,4 +30,7 @@ public class UserPrincipal implements UserDetails {
         return user.getUsername();
     }
 
+    public Users getUser() {
+        return this.user;
+    }
 }

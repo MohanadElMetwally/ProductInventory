@@ -7,19 +7,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.demoweb.ProductInventoryApp.Repository.UserRepo;
 import com.demoweb.ProductInventoryApp.models.UserPrincipal;
 import com.demoweb.ProductInventoryApp.models.Users;
+import com.demoweb.ProductInventoryApp.repository.UserRepo;
 
 @Service
 public class UsersDetailsService implements UserDetailsService {
     @Autowired
-    private UserRepo repo;
+    private UserRepo userRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Users user = repo.findByUsername(username);
+        Users user = userRepo.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(
                 "User with username: %s was not found".formatted(username));

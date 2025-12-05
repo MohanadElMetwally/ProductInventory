@@ -1,26 +1,102 @@
 package com.demoweb.ProductInventoryApp.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demoweb.ProductInventoryApp.DTOs.UserDTO;
-import com.demoweb.ProductInventoryApp.DTOs.UsersDTO;
+import com.demoweb.ProductInventoryApp.annotations.CurrentUser;
+import com.demoweb.ProductInventoryApp.dto.MessageDTO;
+import com.demoweb.ProductInventoryApp.dto.user.UserCreateDTO;
+import com.demoweb.ProductInventoryApp.dto.user.UserDTO;
+import com.demoweb.ProductInventoryApp.dto.user.UserPatchDTO;
+import com.demoweb.ProductInventoryApp.dto.user.UserUpdateDTO;
+import com.demoweb.ProductInventoryApp.dto.user.UsersDTO;
+import com.demoweb.ProductInventoryApp.enums.Role;
+import com.demoweb.ProductInventoryApp.models.Users;
+import com.demoweb.ProductInventoryApp.services.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
+    @Autowired
+    UserService userService;
+
     @GetMapping("/")
-    public UsersDTO getUsers() {
-        return new UsersDTO(null);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UsersDTO> getUsers() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsers());
     }
 
-    @PostMapping("/")
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-
-        return userDTO;
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> readUserMe(@CurrentUser Users user) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.userToDTO(user));
     }
 
+    @GetMapping("/admin-action")
+    public ResponseEntity<MessageDTO> getAdminDashboard(
+        @CurrentUser(requiredRole = Role.ADMIN) Users user) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new MessageDTO("Welcome to your admin dashboard " + user.getFirstName() + "!"));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO userDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.registerUser(userDTO));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int id,
+        @RequestBody UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.userUpdate(id, userUpdateDTO));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserDTO> updateUserMe(@CurrentUser Users user,
+        @RequestBody UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(userService.userUpdateMe(user, userUpdateDTO));
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDTO> userPatch(@PathVariable int id,
+        @RequestBody UserPatchDTO userPatchDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.userPatch(id, userPatchDTO));
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<UserDTO> userPatchMe(@CurrentUser Users user,
+        @RequestBody UserPatchDTO userPatchDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(userService.userPatchMe(user, userPatchDTO));
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDTO> deactivateUser(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deactivateUser(id));
+    }
+
+    @PatchMapping("/deactivate")
+    public ResponseEntity<UserDTO> deactivateUserMe(@CurrentUser Users user) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deactivateUserMe(user));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<MessageDTO> userDelete(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new MessageDTO("Deleted user successfully."));
+    }
 }

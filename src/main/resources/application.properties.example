@@ -1,0 +1,12 @@
+spring.application.name=APP_NAME
+spring.datasource.url=YOUR_CONNECTION_STRING
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.driver-class-name=YOUR_ORM_DRIVER
+spring.jpa.properties.hibernate.dialect=YOUR_DB_DIALECT
+spring.jpa.hibernate.ddl-auto=YOUR_DDL_MODE
+spring.security.user.name=YOUR_USERNAME
+spring.security.user.password=YOUR_PASSWORD
+jwt.secret.key=YOUR_SECRET_KEY
+springdoc.api-docs.path=YOUR_DOC_PATH
+springdoc.swagger-ui.path=YOUR_SWAGGER_UI_PATH
