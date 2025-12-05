@@ -1,4 +1,4 @@
-package com.demoweb.ProductInventoryApp.Exceptions;
+package com.demoweb.ProductInventoryApp.exceptions;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(int id) {
