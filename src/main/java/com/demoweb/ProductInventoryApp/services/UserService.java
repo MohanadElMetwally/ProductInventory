@@ -22,9 +22,6 @@ import com.demoweb.ProductInventoryApp.models.UserPrincipal;
 import com.demoweb.ProductInventoryApp.models.Users;
 import com.demoweb.ProductInventoryApp.repository.UserRepo;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
 @Service
 public class UserService {
     UserRepo userRepo;
@@ -32,9 +29,6 @@ public class UserService {
     BCryptPasswordEncoder passwordEncoder;
     AuthenticationManager authManager;
     JWTService jwtService;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public UserService(UserRepo userRepo, UserMapper userMapper,
         BCryptPasswordEncoder passwordEncoder, AuthenticationManager authManager,
@@ -76,18 +70,12 @@ public class UserService {
         Users user = existingUser.get();
         userMapper.updateUser(dto, user);
 
-        entityManager.flush();
-        entityManager.refresh(user);
-
         return userMapper.toDTO(user);
     }
 
     @Transactional
     public UserDTO userUpdateMe(Users user, UserUpdateDTO dto) {
         userMapper.updateUser(dto, user);
-
-        entityManager.flush();
-        entityManager.refresh(user);
 
         return userMapper.toDTO(user);
     }
@@ -102,18 +90,12 @@ public class UserService {
         Users user = existingUser.get();
         userMapper.patchUser(dto, user);
 
-        entityManager.flush();
-        entityManager.refresh(user);
-
         return userMapper.toDTO(user);
     }
 
     @Transactional
     public UserDTO userPatchMe(Users user, UserPatchDTO dto) {
         userMapper.patchUser(dto, user);
-
-        entityManager.flush();
-        entityManager.refresh(user);
 
         return userMapper.toDTO(user);
     }
@@ -127,8 +109,6 @@ public class UserService {
         Users user = existingUser.get();
         userRepo.delete(user);
 
-        entityManager.flush();
-        entityManager.clear();
     }
 
     @Transactional
@@ -141,18 +121,12 @@ public class UserService {
         Users user = existingUser.get();
         user.setIsActive(false);
 
-        entityManager.flush();
-        entityManager.refresh(user);
-
         return userMapper.toDTO(user);
     }
 
     @Transactional
     public UserDTO deactivateUserMe(Users user) {
         user.setIsActive(false);
-
-        entityManager.flush();
-        entityManager.refresh(user);
         return userMapper.toDTO(user);
     }
 
