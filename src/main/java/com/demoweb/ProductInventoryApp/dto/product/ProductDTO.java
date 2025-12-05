@@ -1,15 +1,14 @@
-package com.demoweb.ProductInventoryApp.DTOs;
+package com.demoweb.ProductInventoryApp.dto.product;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import org.springframework.stereotype.Component;
+import com.demoweb.ProductInventoryApp.models.Users;
 
 import lombok.Data;
 
 @Data
-@Component
-public class ProductDTO implements ApiResponse {
+public class ProductDTO {
     private int id;
     private String name;
     private String description;
@@ -19,4 +18,5 @@ public class ProductDTO implements ApiResponse {
     private Date releaseDate;
     private Boolean available;
     private Integer quantity;
+    private Users user;
 }

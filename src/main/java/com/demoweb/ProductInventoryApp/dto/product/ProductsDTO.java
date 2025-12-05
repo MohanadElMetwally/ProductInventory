@@ -1,4 +1,4 @@
-package com.demoweb.ProductInventoryApp.DTOs;
+package com.demoweb.ProductInventoryApp.dto.product;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UsersDTO {
-    List<UserDTO> users;
+public class ProductsDTO {
+    private List<ProductDetailDTO> products;
 }

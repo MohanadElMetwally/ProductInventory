@@ -1,4 +1,4 @@
-package com.demoweb.ProductInventoryApp.DTOs;
+package com.demoweb.ProductInventoryApp.dto.user;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProductsDTO implements ApiResponse {
-    private List<ProductDTO> products;
+public class UsersDTO {
+    List<UserDTO> users;
 }
