@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.demoweb.ProductInventoryApp.dto.user.UserCreateDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UserDTO;
-import com.demoweb.ProductInventoryApp.dto.user.UserPatchDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UserUpdateDTO;
 import com.demoweb.ProductInventoryApp.models.Users;
 
@@ -39,17 +38,6 @@ public class UserMapper {
     }
 
     public void updateUser(UserUpdateDTO dto, Users user) {
-        if (dto == null || user == null)
-            return;
-
-        user.setUsername(dto.getUsername());
-        user.setRole(dto.getRole());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setIsActive(dto.getIsActive());
-    }
-
-    public void patchUser(UserPatchDTO dto, Users user) {
         if (dto == null || user == null)
             return;
 

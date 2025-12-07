@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.demoweb.ProductInventoryApp.dto.product.ProductCreateDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductDTO;
-import com.demoweb.ProductInventoryApp.dto.product.ProductDetailDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductSummaryDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductUpdateDTO;
 import com.demoweb.ProductInventoryApp.models.Product;
@@ -33,11 +32,11 @@ public class ProductMapper {
             .build();
     }
 
-    public ProductDetailDTO toDTO(Product entity) {
+    public ProductDTO toDTO(Product entity) {
         if (entity == null)
             return null;
 
-        ProductDetailDTO dto = new ProductDetailDTO();
+        ProductDTO dto = new ProductDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
@@ -72,20 +71,6 @@ public class ProductMapper {
     }
 
     public void updateProduct(ProductUpdateDTO dto, Product entity) {
-        if (dto == null || entity == null)
-            return;
-
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setBrand(dto.getBrand());
-        entity.setPrice(dto.getPrice());
-        entity.setCategory(dto.getCategory());
-        entity.setReleaseDate(dto.getReleaseDate());
-        entity.setAvailable(dto.getAvailable());
-        entity.setQuantity(dto.getQuantity());
-    }
-
-    public void patchProduct(ProductDTO dto, Product entity) {
         if (dto == null || entity == null)
             return;
 
