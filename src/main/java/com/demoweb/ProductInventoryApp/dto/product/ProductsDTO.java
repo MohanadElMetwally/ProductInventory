@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ProductsDTO {
-    private List<ProductDetailDTO> products;
+    private List<ProductDTO> products;
 }

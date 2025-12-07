@@ -3,7 +3,7 @@ package com.demoweb.ProductInventoryApp.dto.product;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import com.demoweb.ProductInventoryApp.models.Users;
+import com.demoweb.ProductInventoryApp.dto.user.UserDTO;
 
 import lombok.Data;
 
@@ -18,5 +18,5 @@ public class ProductDTO {
     private Date releaseDate;
     private Boolean available;
     private Integer quantity;
-    private Users user;
+    private UserDTO user;
 }
