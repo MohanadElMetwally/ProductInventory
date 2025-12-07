@@ -18,12 +18,13 @@ import com.demoweb.ProductInventoryApp.annotations.CurrentUser;
 import com.demoweb.ProductInventoryApp.dto.MessageDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductCreateDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductDTO;
-import com.demoweb.ProductInventoryApp.dto.product.ProductDetailDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductUpdateDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductsDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductsSummaryDTO;
 import com.demoweb.ProductInventoryApp.models.Users;
 import com.demoweb.ProductInventoryApp.services.ProductService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/products")
@@ -34,29 +35,28 @@ public class ProductsController {
 
     @GetMapping("/")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ProductsDTO> getProducts() {
+    public ResponseEntity<ProductsDTO> readProducts() {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDetailDTO> getProduct(@PathVariable int id) {
+    public ResponseEntity<ProductDTO> readProduct(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductById(id));
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<ProductsSummaryDTO> getUserProducts(@PathVariable int id) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(productService.getProductsByUserId(id));
+    public ResponseEntity<ProductsSummaryDTO> readUserProducts(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductsByUserId(id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProductDetailDTO> createProduct(@CurrentUser Users user,
-        @RequestBody ProductCreateDTO dto) {
+    public ResponseEntity<ProductDTO> createProduct(@CurrentUser Users user,
+        @Valid @RequestBody ProductCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.addProduct(dto, user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDetailDTO> updateProducts(@PathVariable int id,
+    public ResponseEntity<ProductDTO> updateProducts(@PathVariable int id,
         @RequestBody ProductUpdateDTO prod) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id, prod));
     }
@@ -69,8 +69,8 @@ public class ProductsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductDetailDTO> patchProducts(@PathVariable int id,
-        @RequestBody ProductDTO prod) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.patchProduct(id, prod));
+    public ResponseEntity<ProductDTO> patchProducts(@PathVariable int id,
+        @RequestBody ProductUpdateDTO prod) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id, prod));
     }
 }
