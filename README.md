@@ -20,7 +20,7 @@ A Spring Boot REST API application for managing product inventory with user auth
 - **Lombok**
 - **Swagger/OpenAPI**
 
-### Prerequisites
+## Prerequisites
 
 - Java 21 or higher
 - PostgreSQL database
