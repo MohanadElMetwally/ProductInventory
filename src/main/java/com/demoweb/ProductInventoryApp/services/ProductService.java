@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.demoweb.ProductInventoryApp.dto.product.ProductCreateDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductDTO;
-import com.demoweb.ProductInventoryApp.dto.product.ProductDetailDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductSummaryDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductUpdateDTO;
 import com.demoweb.ProductInventoryApp.dto.product.ProductsDTO;
@@ -31,10 +30,7 @@ public class ProductService {
     }
 
     public ProductsDTO getProducts() {
-        List<ProductDetailDTO> products = prodRepo.findAll()
-            .stream()
-            .map(prodMapper::toDTO)
-            .toList();
+        List<ProductDTO> products = prodRepo.findAll().stream().map(prodMapper::toDTO).toList();
         return new ProductsDTO(products);
     }
 
@@ -46,13 +42,13 @@ public class ProductService {
         return new ProductsSummaryDTO(products);
     }
 
-    public ProductDetailDTO addProduct(ProductCreateDTO dto, Users user) {
+    public ProductDTO addProduct(ProductCreateDTO dto, Users user) {
         Product prod = prodMapper.toEntity(dto, user);
         prodRepo.save(prod);
         return prodMapper.toDTO(prod);
     }
 
-    public ProductDetailDTO getProductById(int id) {
+    public ProductDTO getProductById(int id) {
         Optional<Product> existingProduct = prodRepo.findById(id);
 
         if (existingProduct.isEmpty())
@@ -62,7 +58,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDetailDTO updateProduct(int id, ProductUpdateDTO dto) {
+    public ProductDTO updateProduct(int id, ProductUpdateDTO dto) {
         Optional<Product> existingProduct = prodRepo.findById(id);
 
         if (existingProduct.isEmpty())
@@ -70,18 +66,6 @@ public class ProductService {
 
         Product product = existingProduct.get();
         prodMapper.updateProduct(dto, product);
-        return prodMapper.toDTO(product);
-    }
-
-    @Transactional
-    public ProductDetailDTO patchProduct(int id, ProductDTO dto) {
-        Optional<Product> existingProduct = prodRepo.findById(id);
-
-        if (existingProduct.isEmpty())
-            throw new ProductNotFoundException(id);
-
-        Product product = existingProduct.get();
-        prodMapper.patchProduct(dto, product);
         return prodMapper.toDTO(product);
     }
 
@@ -94,5 +78,4 @@ public class ProductService {
 
         prodRepo.delete(existingProduct.get());
     }
-
 }

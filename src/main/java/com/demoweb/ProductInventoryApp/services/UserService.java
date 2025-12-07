@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.demoweb.ProductInventoryApp.dto.TokenDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UserCreateDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UserDTO;
-import com.demoweb.ProductInventoryApp.dto.user.UserPatchDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UserUpdateDTO;
 import com.demoweb.ProductInventoryApp.dto.user.UsersDTO;
+import com.demoweb.ProductInventoryApp.exceptions.ForbiddenAdminOperationException;
 import com.demoweb.ProductInventoryApp.exceptions.UserNotFoundException;
 import com.demoweb.ProductInventoryApp.mappers.UserMapper;
 import com.demoweb.ProductInventoryApp.models.UserPrincipal;
@@ -68,6 +68,9 @@ public class UserService {
             throw new UserNotFoundException(id);
 
         Users user = existingUser.get();
+        if (user.getRole().name().equalsIgnoreCase("admin")) {
+            throw new ForbiddenAdminOperationException("Admins can't update other admins");
+        }
         userMapper.updateUser(dto, user);
 
         return userMapper.toDTO(user);
@@ -81,34 +84,16 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO userPatch(int id, UserPatchDTO dto) {
-        Optional<Users> existingUser = userRepo.findById(id);
-
-        if (existingUser.isEmpty())
-            throw new UserNotFoundException(id);
-
-        Users user = existingUser.get();
-        userMapper.patchUser(dto, user);
-
-        return userMapper.toDTO(user);
-    }
-
-    @Transactional
-    public UserDTO userPatchMe(Users user, UserPatchDTO dto) {
-        userMapper.patchUser(dto, user);
-
-        return userMapper.toDTO(user);
-    }
-
-    @Transactional
     public void deleteUser(int id) {
-        var existingUser = userRepo.findById(id);
+        Optional<Users> existingUser = userRepo.findById(id);
         if (existingUser.isEmpty())
             throw new UserNotFoundException(id);
 
         Users user = existingUser.get();
+        if (user.getRole().name().equalsIgnoreCase("admin")) {
+            throw new ForbiddenAdminOperationException("Admins can't delete other admins");
+        }
         userRepo.delete(user);
-
     }
 
     @Transactional
@@ -119,6 +104,9 @@ public class UserService {
             throw new UserNotFoundException(id);
 
         Users user = existingUser.get();
+        if (user.getRole().name().equalsIgnoreCase("admin")) {
+            throw new ForbiddenAdminOperationException("Admins can't deactivate other admins");
+        }
         user.setIsActive(false);
 
         return userMapper.toDTO(user);
@@ -126,6 +114,9 @@ public class UserService {
 
     @Transactional
     public UserDTO deactivateUserMe(Users user) {
+        if (user.getRole().name().equalsIgnoreCase("admin")) {
+            throw new ForbiddenAdminOperationException("Admins can't deactivate themselves");
+        }
         user.setIsActive(false);
         return userMapper.toDTO(user);
     }
